@@ -3,6 +3,7 @@
 # ZTE-ModemFlow 一键部署脚本
 # 作者：https://github.com/Rabbit-Spec
 # 版本：1.0.2
+# 日期：2026.03.02
 # ==========================================
 
 set -e
@@ -25,14 +26,14 @@ error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
 # --- 脚本逻辑 ---
 echo -e "${BLUE}==========================================${NC}"
-log "开始精准部署 ZTE-ModemFlow 项目文件..."
+log "开始部署 ZTE-ModemFlow 项目文件..."
 echo -e "${BLUE}==========================================${NC}"
 
 # 1. 创建目录
 log "创建必要目录..."
 mkdir -p /config/shell /config/packages /config/themes
 
-# 2. 精准下载指定文件
+# 2. 下载指定文件
 log "正在下载核心脚本: zte_monitor.sh..."
 curl -sSL -o /config/shell/zte_monitor.sh "${RAW_URL}/scripts/zte_monitor.sh"
 
@@ -46,7 +47,7 @@ curl -sSL -o /config/themes/mushroom-glass.yaml "${RAW_URL}/themes/mushroom-glas
 chmod +x /config/shell/zte_monitor.sh
 success "所有核心文件下载完成，并已授予执行权限。"
 
-# 4. 智能注入配置
+# 4. 注入配置
 CONFIG_FILE="/config/configuration.yaml"
 if ! grep -q "packages: !include_dir_named packages" "$CONFIG_FILE"; then
     warn "检测到尚未挂载 Packages，正在执行自动注入..."
