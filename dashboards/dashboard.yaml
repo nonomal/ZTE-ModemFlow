@@ -9,7 +9,7 @@ type: vertical-stack
 cards:
   - type: custom:mushroom-title-card
     title: 光猫仪表盘
-    subtitle: G100P-17N3 # 自行更改你的光猫型号
+    subtitle: G100P-17N3
     card_mod:
       style: |
         ha-card {
@@ -56,11 +56,11 @@ cards:
     primary: "{{ states(entity) }} pkts"
     secondary: PON 物理错误 (FEC)
     icon: mdi:check-decagram
-    vertical: true
+    layout: vertical
+    icon_color: green
     features_position: bottom
     tap_action:
       action: more-info
-    color: green
     card_mod:
       style: |
         :host { --mush-icon-size: 72px !important; }
@@ -74,34 +74,16 @@ cards:
         name: CPU 负载
         icon: mdi:cpu-64-bit
         icon_color: red
-        card_mod:
-          style: |
-            ha-card:hover {
-              background: var(--secondary-background-color) !important;
-              cursor: pointer !important;
-            }
       - type: custom:mushroom-entity-card
         entity: sensor.zte_modem_info
         name: CPU 温度
         icon: mdi:thermometer
         icon_color: orange
-        card_mod:
-          style: |
-            ha-card:hover {
-              background: var(--secondary-background-color) !important;
-              cursor: pointer !important;
-            }
       - type: custom:mushroom-entity-card
         entity: sensor.guang_mao_nei_cun_zhan_yong
         name: 内存占用
         icon: mdi:memory
         icon_color: purple
-        card_mod:
-          style: |
-            ha-card:hover {
-              background: var(--secondary-background-color) !important;
-              cursor: pointer !important;
-            }
   - type: grid
     columns: 2
     square: false
@@ -111,7 +93,7 @@ cards:
         primary: "{{ states(entity) }} ms"
         secondary: 内网延迟
         icon: mdi:access-point-network
-        color: >-
+        icon_color: >-
           {% if states(entity) | float(0) < 5 %} green  {% elif states(entity) |
           float(0) < 20 %} yellow {% else %} red {% endif %}
         features_position: bottom
@@ -123,7 +105,7 @@ cards:
           86400 }} 天 {{ (uptime % 86400) // 3600 }} 时 {{ (uptime % 3600) // 60
           }} 分
         secondary: 运行时间
-        color: green
+        icon_color: green
         features_position: bottom
   - type: grid
     columns: 2
@@ -134,30 +116,30 @@ cards:
         icon: mdi:download-network-outline
         primary: "{{ states(entity) }}"
         secondary: PON 接收包
-        color: indigo
+        icon_color: indigo
         features_position: bottom
       - type: custom:mushroom-template-card
         entity: sensor.guang_mao_pon_fa_song_bao
         icon: mdi:upload-network-outline
         primary: "{{ states(entity) }}"
         secondary: PON 发送包
-        color: deep-orange
+        icon_color: deep-orange
         features_position: bottom
   - type: grid
     columns: 2
     square: false
     cards:
       - type: custom:mushroom-template-card
-        entity: sensor.lankou_jie_shou_bao
+        entity: sensor.guang_mao_lan_jie_shou_bao
         icon: mdi:import
         primary: "{{ states(entity) }}"
         secondary: LAN 接收包
-        color: blue
+        icon_color: blue
         features_position: bottom
       - type: custom:mushroom-template-card
-        entity: sensor.lankou_fa_song_bao
+        entity: sensor.guang_mao_lan_fa_song_bao
         icon: mdi:export
         primary: "{{ states(entity) }}"
         secondary: LAN 发送包
-        color: amber
+        icon_color: amber
         features_position: bottom
