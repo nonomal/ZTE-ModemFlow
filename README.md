@@ -42,26 +42,20 @@
 2. **Mini-Graph-Card**：用于显示趋势曲线。
 3. **Card-mod**：核心视觉依赖，用于实现模糊效果。
 
-## 🚀 安装与配置
+## 🚀 快速开始 (一键部署)
 
-### 1. 部署脚本 (Scripts)
-将 `scripts/` 目录下的文件上传至 `/config/shell/` 文件夹下，并赋予执行权限：
+### 1. 在 Home Assistant 的终端 (Terminal / SSH) 中直接粘贴并运行以下命令：
+
 ```bash
-chmod +x /config/shell/zte_monitor.sh
-chmod +x /config/shell/reboot_modem.sh
+# 使用脚本一键安装
+curl -sSL https://raw.githubusercontent.com/Rabbit-Spec/ZTE-ModemFlow/main/spec/install.sh | bash
 ```
 > **注意**：脚本默认 Telnet 登录信息为 `root` / `Zte521`，如不同请自行修改。
 
-### 2. 配置光猫数据传感器以及自动化 (Conf)
-1. 将 `conf/configuration.yaml` 内容合并至你的 HA `configuration.yaml` 配置。
-2. 将 `conf/automations.yaml` 内容合并至你的 HA `automations.yaml` 配置。
-3. 在 HA 自动化中启用 **每分钟同步光猫数据到文件** 自动化。
-脚本会生成 `zte_data.json` 文件由 `command_line` 传感器读取。
-
-### 3. 应用主题 (Themes)
+### 2. 应用主题 (Themes)
 将 `themes/mushroom-glass.yaml` 放入 HA 的 `themes` 目录并启用该主题。
 
-### 4. 导入仪表盘 (Dashboards)
+### 3. 导入仪表盘 (Dashboards)
 新建仪表盘面板，将 `dashboards/dashboard.yaml` 内容粘贴至代码编辑器。
 
 ## 📊 监控指标说明
