@@ -1,0 +1,8 @@
+alias: 每分钟同步光猫数据到文件
+description: 定时运行脚本更新 JSON 文件
+mode: restart
+triggers:
+  - minutes: /1
+    trigger: time_pattern
+actions:
+  - action: shell_command.update_zte_modem_data
