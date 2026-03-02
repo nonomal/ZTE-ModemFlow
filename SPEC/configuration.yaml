@@ -1,0 +1,25 @@
+http:
+  server_port: 8123
+
+homeassistant:
+  packages: !include_dir_named packages
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# 数据库优化
+recorder:
+  purge_keep_days: 3  # 仅保留最近 3 天的历史记录
+  auto_purge: true    # 每天凌晨自动清理旧数据
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
