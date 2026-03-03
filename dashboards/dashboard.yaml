@@ -2,7 +2,7 @@
 # 卡片：中兴 ZX279133 光猫数据展示卡片
 # 功能：自动化数据采集与监控
 # 作者：https://github.com/Rabbit-Spec
-# 版本：1.0.3
+# 版本：1.0.4
 # 日期：2026.03.03
 # ==========================================
 
@@ -114,7 +114,7 @@ cards:
         icon: mdi:restart
         tap_action:
           action: call-service
-          service: shell_command.reboot_modem
+          service: shell_command.reboot_modem_only
           confirmation:
             text: ⚠️ 确定要重启光猫吗？家里网络将会断开大约 3 分钟！
         color: red
