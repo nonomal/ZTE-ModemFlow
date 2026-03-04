@@ -13,7 +13,6 @@ icon: mdi:dresser
 card_mod:
   style: |
     :host {
-      /* 强行透出主题背景，并给四周留出呼吸感边缘 */
       padding: 16px !important; 
       background: transparent !important; 
     }
