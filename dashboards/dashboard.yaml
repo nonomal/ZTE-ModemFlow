@@ -2,8 +2,8 @@
 # 卡片：中兴 ZX279133 光猫数据展示卡片
 # 功能：自动化数据采集与监控
 # 作者：https://github.com/Rabbit-Spec
-# 版本：1.0.4
-# 日期：2026.03.03
+# 版本：1.0.5
+# 日期：2026.03.04
 # ==========================================
 
 type: vertical-stack
@@ -31,6 +31,9 @@ cards:
     height: 140
     hours_to_show: 0.5
     points_per_hour: 30
+    upper_bound: 80
+    lower_bound: 30
+    lower_bound_secondary: 0
     entities:
       - entity: sensor.zte_modem_info
         name: CPU 温度
