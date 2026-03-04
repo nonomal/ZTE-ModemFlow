@@ -31,8 +31,8 @@ cards:
       - type: vertical-stack
         cards:
           - type: custom:mushroom-title-card
-            title: 光猫仪表盘
-            subtitle: G100P-17N3
+            title: 光猫仪表盘（可自行修改标题）
+            subtitle: G100P-17N3（可自行修改为你设备的型号）
             alignment: center
             card_mod:
               style: |
