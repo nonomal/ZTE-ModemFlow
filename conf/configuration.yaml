@@ -29,8 +29,6 @@ command_line:
         - pon_uptime
         - mem_total
         - mem_avail
-        - pon_rx_bytes
-        - pon_tx_bytes
         - pon_err
         - eth_rx
         - eth_tx
@@ -69,15 +67,6 @@ template:
         icon: mdi:cpu-64-bit
         state_class: measurement
 
-      - name: "光猫总流量消耗"
-        unit_of_measurement: "GB"
-        icon: mdi:web
-        state_class: total_increasing
-        state: >
-          {% set rx = state_attr('sensor.zte_modem_info', 'pon_rx_bytes') | float(0) %}
-          {% set tx = state_attr('sensor.zte_modem_info', 'pon_tx_bytes') | float(0) %}
-          {{ ((rx + tx) / 1073741824) | round(2) }}
-
       - name: "光猫 PON 物理错误" 
         unit_of_measurement: "pkts"
         icon: mdi:shield-check
@@ -90,13 +79,13 @@ template:
         icon: mdi:pulse
         state_class: measurement
 
-      - name: "LAN口 接收包"
+      - name: "光猫 LAN 接收包"
         unit_of_measurement: "pkts"
         icon: mdi:lan-connect
         state_class: total_increasing
         state: "{{ state_attr('sensor.zte_modem_info', 'eth_rx') }}"
 
-      - name: "LAN口 发送包"
+      - name: "光猫 LAN 发送包"
         unit_of_measurement: "pkts"
         icon: mdi:lan-disconnect
         state_class: total_increasing
