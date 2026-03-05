@@ -2,7 +2,8 @@
 # ==========================================
 # 脚本：中兴 ZX279133 光猫数据查询脚本
 # 功能：中兴光猫自动化数据采集与监控工具。
-# 版本：1.2.5
+# 版本：1.2.6
+# 日期：2026.03.05
 # 作者：https://github.com/Rabbit-Spec
 # ==========================================
 
@@ -63,7 +64,7 @@ RESULT=$(echo "$RAW_RESULT" | tr -d '\r')
 UPTIME_RAW=$(echo "$RESULT" | grep -oE "[0-9]+\.[0-9]+[[:space:]]+[0-9]+\.[0-9]+" | head -n 1 | awk '{print $1}' | cut -d. -f1)
 [ -z "$UPTIME_RAW" ] && UPTIME_RAW=0
 
-# --- 【彻底修复】CPU与温度 (屏蔽cat命令回显) ---
+# --- CPU与温度 ---
 CPU=$(echo "$RESULT" | grep -iE "average|usage" | grep -v "cat" | grep -oE "[0-9.]+" | head -n 1)
 TEMP=$(echo "$RESULT" | grep -iE "temper|temp" | grep -v "cat" | grep -oE "[0-9]{2,3}" | head -n 1)
 
