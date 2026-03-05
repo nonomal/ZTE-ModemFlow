@@ -2,8 +2,8 @@
 # ==========================================
 # ZTE-ModemFlow 一键部署脚本
 # 作者：https://github.com/Rabbit-Spec
-# 版本：1.0.8
-# 日期：2026.03.03
+# 版本：1.1.1
+# 日期：2026.03.05
 # ==========================================
 
 set -e
@@ -31,7 +31,7 @@ echo -e "${BLUE}==========================================${NC}"
 
 # 1. 创建目录
 log "创建必要目录..."
-mkdir -p /config/shell /config/packages /config/themes
+mkdir -p /config/shell /config/packages /config/themes  /config/www/img
 
 # 2. 下载指定文件
 log "正在下载核心脚本: zte_monitor.sh..."
@@ -43,11 +43,24 @@ curl -sSL -o /config/packages/zte_modemflow.yaml "${RAW_URL}/packages/zte_modemf
 log "正在下载主题文件: mushroom-glass.yaml..."
 curl -sSL -o /config/themes/mushroom-glass.yaml "${RAW_URL}/themes/mushroom-glass.yaml"
 
+log "正在下载背景文件: zte_modem.jpg..."
+curl -sSL -o /config/www/img/zte_modem.jpg "${RAW_URL}/IMG/zte_modem.jpg"
+curl -sSL -o /config/www/img/ZTE-ModemFlow.png "${RAW_URL}/IMG/ZTE-ModemFlow.png"
+
 # 3. 设置权限
 chmod +x /config/shell/zte_monitor.sh
 success "所有核心文件下载完成，并已授予执行权限。"
 
-# 4. 注入配置
+# 4. HACS 环境检查
+log "正在检查 HACS 环境..."
+if [ ! -d "/config/custom_components/hacs" ]; then
+    warn "未在 /config/custom_components 中检测到 HACS。"
+    warn "请确保稍后手动安装 HACS，否则无法下载所需的 Mushroom 等前端卡片。"
+else
+    success "检测到 HACS 已安装。"
+fi
+
+# 5. 注入配置
 CONFIG_FILE="/config/configuration.yaml"
 if ! grep -q "packages: !include_dir_named packages" "$CONFIG_FILE"; then
     warn "检测到尚未挂载 Packages，正在执行自动注入..."
@@ -68,7 +81,7 @@ echo -e "${GREEN}======================================================${NC}"
 echo -e "             🎉 ${YELLOW}ZTE-ModemFlow 部署成功！${NC}"
 echo -e ""
 echo -e "        🧑‍💻 作者: ${BLUE}https://github.com/Rabbit-Spec${NC}"
-echo -e "        🏷️ 版本: ${BLUE}v1.0.9${NC}"
+echo -e "        🏷️ 版本: ${BLUE}v1.1.1${NC}"
 echo -e "${GREEN}======================================================${NC}"
 echo -e "${YELLOW}📌 后续操作指南：${NC}\n"
 
