@@ -1,9 +1,10 @@
 #!/bin/sh
 # ==========================================
 # 脚本：中兴 ZX279133 光猫数据查询脚本
-# 功能：中兴光猫自动化数据采集与监控工具。
-# 版本：1.2.6
+# 功能：中兴光猫自动化数据采集与监控工具
 # 作者：https://github.com/Rabbit-Spec
+# 版本：1.2.7
+# 日期：2026.03.16
 # ==========================================
 
 # ---------------------------------------------------------
@@ -38,7 +39,7 @@ PING_LATENCY=$(ping -c 1 $IP | grep 'time=' | awk -F'time=' '{print $2}' | awk '
 echo "   结果: ${PING_LATENCY} ms"
 
 # ---------------------------------------------------------
-# 4. 核心抓取逻辑
+# 4. 核心抓取逻辑 (注入 opticaltst 命令)
 # ---------------------------------------------------------
 echo ">> [4/6] 正在执行远程指令获取数据..."
 RAW_RESULT=$(expect -c "
@@ -47,7 +48,7 @@ spawn telnet $IP
 expect \"Login:\" { send \"$USER\r\" }
 expect \"Password:\" { send \"$PASS\r\" }
 expect \"/ # \"
-send \"cat /proc/uptime; cat /proc/cpuusage; cat /proc/tempsensor; cat /proc/net/dev; cat /proc/meminfo\r\"
+send \"cat /proc/uptime; cat /proc/cpuusage; cat /proc/tempsensor; cat /proc/net/dev; cat /proc/meminfo; opticaltst -getpara\r\"
 expect \"/ # \"
 send \"exit\r\"
 expect eof
@@ -65,7 +66,7 @@ UPTIME_RAW=$(echo "$RESULT" | grep -oE "[0-9]+\.[0-9]+[[:space:]]+[0-9]+\.[0-9]+
 
 # --- CPU与温度 ---
 CPU=$(echo "$RESULT" | grep -iE "average|usage" | grep -v "cat" | grep -oE "[0-9.]+" | head -n 1)
-TEMP=$(echo "$RESULT" | grep -iE "temper|temp" | grep -v "cat" | grep -oE "[0-9]{2,3}" | head -n 1)
+TEMP=$(echo "$RESULT" | grep -iE "temper|temp" | grep -viE "cat|optical" | grep -oE "[0-9]{2,3}" | head -n 1)
 
 # --- 内存处理 ---
 MEM_TOTAL=$(echo "$RESULT" | grep "MemTotal:" | awk '{print $2}' | tr -cd '0-9')
@@ -88,6 +89,14 @@ PON_ERR=$(echo "$PON_LINE" | awk '{print $4}' | tr -cd '0-9')
 ETH_LINE=$(echo "$RESULT" | grep "eth0:" | head -n 1)
 ETH_RX=$(echo "$ETH_LINE" | awk '{print $3}' | tr -cd '0-9')
 ETH_TX=$(echo "$ETH_LINE" | awk '{print $11}' | tr -cd '0-9')
+
+# --- 接收光功率解析 ---
+OPTICAL_RX_RAW=$(echo "$RESULT" | grep "optical RXPower=" | awk -F'=' '{print $2}' | tr -cd '0-9')
+if [ -n "$OPTICAL_RX_RAW" ] && [ "$OPTICAL_RX_RAW" -gt 0 ]; then
+    OPTICAL_RX=$(awk -v raw="$OPTICAL_RX_RAW" 'BEGIN {printf "%.2f", 10 * log(raw / 10000) / log(10)}')
+else
+    OPTICAL_RX=0
+fi
 
 # --- 智能对时逻辑 ---
 SYNC_STATUS="已跳过 (运行稳定)"
@@ -130,7 +139,7 @@ echo " ✅ 数据采集完成！光猫数据看板 ($LAST_UPDATE)"
 echo "------------------------------------------------------------"
 echo " [时间状态] 同步状态: $SYNC_STATUS"
 echo " [核心硬件] 温度: ${TEMP:-0} °C | CPU: ${CPU:-0} % | 内存可用: ${MEM_AVAIL:-0} KB"
-echo " [链路质量] 延迟: ${PING_LATENCY:-0} ms | 物理错误(FEC): ${PON_ERR:-0} pkts"
+echo " [链路质量] 延迟: ${PING_LATENCY:-0} ms | 物理错误(FEC): ${PON_ERR:-0} | 接收光衰: ${OPTICAL_RX:-0} dBm"
 echo " [PON 网络] 接收: ${PON_RX:-0} 包 | 发送: ${PON_TX:-0} 包"
 echo " [LAN 端口] 接收: ${ETH_RX:-0} 包 | 发送: ${ETH_TX:-0} 包"
 echo " [系统运行] 累计时长: ${UPTIME_RAW:-0} 秒"
