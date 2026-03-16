@@ -3,7 +3,7 @@
 # 脚本：中兴 ZX279133 光猫数据查询脚本
 # 功能：中兴光猫自动化数据采集与监控工具
 # 作者：https://github.com/Rabbit-Spec
-# 版本：1.2.8
+# 版本：1.2.9
 # 日期：2026.03.16
 # ==========================================
 
@@ -99,22 +99,20 @@ else
 fi
 
 # --- 智能对时逻辑 ---
-SYNC_STATUS="已跳过 (运行稳定)"
-if [ "$UPTIME_RAW" -gt 0 ] && [ "$UPTIME_RAW" -lt 600 ]; then
-    echo "   -> 检测到系统刚启动 ($UPTIME_RAW s)，执行强制对时..."
-    expect -c "
-    set timeout 10
-    spawn telnet $IP
-    expect \"Login:\" { send \"$USER\r\" }
-    expect \"Password:\" { send \"$PASS\r\" }
-    expect \"/ # \"
-    send \"export TZ='CST-8'; date -s \\\"$SYNC_TIME\\\"\r\"
-    expect \"/ # \"
-    send \"exit\r\"
-    expect eof
-    " > /dev/null 2>&1
-    SYNC_STATUS="已执行同步"
-fi
+echo "   -> 正在执行强制对时 (CST-8)..."
+expect -c "
+set timeout 10
+spawn telnet $IP
+expect \"Login:\" { send \"$USER\r\" }
+expect \"Password:\" { send \"$PASS\r\" }
+expect \"/ # \"
+# 下发时区声明与对时指令
+send \"export TZ='CST-8'; date -s \\\"$SYNC_TIME\\\"\r\"
+expect \"/ # \"
+send \"exit\r\"
+expect eof
+" > /dev/null 2>&1
+SYNC_STATUS="已执行同步"
 
 # ---------------------------------------------------------
 # 6. 导出 JSON 并设置权限
