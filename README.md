@@ -5,7 +5,7 @@
   专为中兴 ZX279133 光猫设计的高级 Home Assistant 监控方案
 </p>
 <p align="center">
-通过底层 Telnet 自动化脚本，将光猫的硬件状态、链路质量及网络流量解析并同步至 HomeAssistant 仪表盘。
+通过底层 Telnet 自动化脚本，将光猫的硬件状态、链路质量及网络流量解析并同步至 HomeAssistant 仪表盘
 </p>
 
 <p align="center">
