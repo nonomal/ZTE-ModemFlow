@@ -3,8 +3,8 @@
 # 脚本：中兴 ZX279133 光猫数据查询脚本
 # 功能：中兴光猫自动化数据采集与监控工具
 # 作者：https://github.com/Rabbit-Spec
-# 版本：1.3.3
-# 日期：2026.04.22
+# 版本：1.3.4
+# 日期：2026.04.24
 # ==========================================
 
 # ---------------------------------------------------------
@@ -34,7 +34,7 @@ SYNC_TIME=$(TZ='Asia/Shanghai' date "+%Y-%m-%d %H:%M:%S")
 # 3. 光猫延迟探测
 # ---------------------------------------------------------
 echo ">> [3/6] 正在测试光猫延迟..."
-PING_LATENCY=$(curl -o /dev/null -s -I -w "%{time_connect}" --connect-timeout 2 http://$IP | awk '{printf "%.0f", $1 * 1000}')
+PING_LATENCY=$(curl -o /dev/null -s -I -w "%{time_connect}" --connect-timeout 2 http://$IP | awk '{printf "%.1f", $1 * 1000}')
 [ -z "$PING_LATENCY" ] && PING_LATENCY=0
 
 # ---------------------------------------------------------
